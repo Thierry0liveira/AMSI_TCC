@@ -1,0 +1,140 @@
+/* ============================================================
+   AMSI — Lista de Usuários
+   Temas: Verde Associação | Corporativo
+   ============================================================ */
+
+@import './theme.css';
+
+.user-list-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ── Cabeçalho da seção ── */
+.user-list-container h2 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 24px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ════════════════════════════════════════
+   TABELA
+   ════════════════════════════════════════ */
+.user-list-container .table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 0.87rem;
+  color: var(--text);
+  background: var(--bg-card);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+/* Cabeçalho da tabela */
+.user-list-container .table thead tr {
+  /* Removido !important — especificidade resolvida pelo escopo da classe pai */
+  background: var(--accent);
+  border-bottom: 2px solid var(--border);
+}
+
+[data-theme="corporativo"] .user-list-container .table thead tr {
+  background: var(--bg-card);
+}
+
+.user-list-container .table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+[data-theme="corporativo"] .user-list-container .table th {
+  color: var(--text-muted);
+}
+
+/* Linhas do corpo */
+.user-list-container .table tbody tr {
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+  transition: background 0.15s ease;
+}
+
+.user-list-container .table tbody tr:hover {
+  background: var(--input-bg);
+}
+
+.user-list-container .table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.user-list-container .table td {
+  padding: 12px 16px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* ════════════════════════════════════════
+   BOTÕES DE AÇÃO
+   Nota: usamos classes próprias com prefixo
+   para não conflitar com Bootstrap nativo.
+   ════════════════════════════════════════ */
+.user-list-container .btn-acao-editar {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  background: transparent;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.user-list-container .btn-acao-editar:hover {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.user-list-container .btn-acao-deletar {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  background: transparent;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.user-list-container .btn-acao-deletar:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+/* ════════════════════════════════════════
+   RESPONSIVIDADE
+   ════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Scroll horizontal na tabela */
+  .user-list-container {
+    overflow-x: auto;
+  }
+
+  .user-list-container .table {
+    min-width: 650px;
+  }
+}

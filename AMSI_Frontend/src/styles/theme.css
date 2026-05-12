@@ -1,0 +1,95 @@
+/* ============================================================
+   AMSI — Sistema de Temas
+   Tema padrão: Verde Associação
+   Tema alternativo: Corporativo (data-theme="corporativo")
+
+   REGRA FUNDAMENTAL:
+   Nunca use cores hardcoded nos componentes.
+   Sempre use var(--nome-da-variavel).
+   ============================================================ */
+
+/* ════════════════════════════════════════
+   TEMA VERDE (padrão — sem data-theme)
+   ════════════════════════════════════════ */
+:root {
+  /* Cores principais */
+  --primary:       #1B4332;   /* verde escuro AMSI */
+  --btn-hover:     #14532d;   /* hover do botão primário */
+  --accent:        #e8f0e4;   /* fundo suave de destaque */
+
+  /* Fundos */
+  --bg:            #EFE6DD;   /* fundo geral da página */
+  --bg-card:       #ffffff;   /* fundo dos cards e painéis */
+  --input-bg:      #f4efe9;   /* fundo dos inputs */
+
+  /* Texto */
+  --text:          #1a1a1a;
+  --text-muted:    #6b7280;
+
+  /* Bordas e sombras */
+  --border:        #d9d0c7;
+  --shadow:        rgba(0, 0, 0, 0.08);
+
+  /* Tipografia */
+  --font-display:  'Cormorant Garamond', serif;
+  --font-body:     'DM Sans', sans-serif;
+
+  /* Decorativos */
+  --gold:          #c9a84c;
+
+  /* Login branding — textos sobre fundo --primary (verde escuro = fundo escuro) */
+  --branding-text-corporativo: #0c4a6e; /* usado apenas no tema corporativo */
+}
+
+/* ════════════════════════════════════════
+   TEMA CORPORATIVO (data-theme="corporativo")
+   ════════════════════════════════════════ */
+[data-theme="corporativo"] {
+  /* Cores principais */
+  --primary:       #38BDF8;   /* azul céu */
+  --btn-hover:     #0ea5e9;   /* hover do botão primário */
+  --accent:        #1e293b;   /* fundo suave de destaque (escuro) */
+
+  /* Fundos */
+  --bg:            #0F172A;   /* fundo geral da página (dark) */
+  --bg-card:       #1e293b;   /* fundo dos cards */
+  --input-bg:      #0f172a;   /* fundo dos inputs */
+
+  /* Texto */
+  --text:          #f1f5f9;
+  --text-muted:    #94a3b8;
+
+  /* Bordas e sombras */
+  --border:        #334155;
+  --shadow:        rgba(0, 0, 0, 0.35);
+
+  /* Tipografia — mesma do tema verde */
+  --font-display:  'Cormorant Garamond', serif;
+  --font-body:     'DM Sans', sans-serif;
+
+  /* Decorativos */
+  --gold:          #c9a84c;
+
+  /* Login branding — textos sobre fundo --primary (#38BDF8 = fundo claro) */
+  /* O fundo claro exige texto escuro para contraste */
+  --branding-text-corporativo: #0c4a6e;
+}
+
+/* ════════════════════════════════════════
+   RESET BÁSICO DE CONSISTÊNCIA
+   Garante que inputs e selects herdem
+   as cores do tema corretamente
+   ════════════════════════════════════════ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  transition: background 0.3s ease, color 0.3s ease;
+  margin: 0;
+}

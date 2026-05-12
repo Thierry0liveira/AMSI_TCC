@@ -1,0 +1,312 @@
+/* ============================================================
+   AMSI — Login Page
+   Temas: Verde Associação | Corporativo
+   ============================================================ */
+
+@import './theme.css';
+
+/* ── Container principal: grid 2 colunas ── */
+.login-container {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  transition: background 0.4s ease;
+}
+
+/* ════════════════════════════════════════
+   LADO ESQUERDO — Branding visual
+   ════════════════════════════════════════ */
+.login-branding {
+  background: var(--primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.4s ease;
+}
+
+/* Efeito radial decorativo */
+.login-branding::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(201, 168, 76, 0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Círculo decorativo no canto */
+.login-branding::after {
+  content: '';
+  position: absolute;
+  bottom: -80px;
+  right: -80px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.branding-logo {
+  width: 250px;
+  height: auto;
+  margin-bottom: 32px;
+  animation: fadeInDown 0.8s ease both;
+  border-radius: 12px;
+  padding: 12px;
+  background: white;
+}
+
+.branding-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  animation: fadeInDown 0.8s 0.1s ease both;
+}
+
+.branding-subtitle {
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.55);
+  text-align: center;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: 10px;
+  animation: fadeInDown 0.8s 0.2s ease both;
+}
+
+.branding-divider {
+  width: 40px;
+  height: 1px;
+  background: var(--gold, #c9a84c);
+  margin: 28px auto;
+  opacity: 0.6;
+  animation: fadeInDown 0.8s 0.3s ease both;
+}
+
+.branding-tagline {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: center;
+  max-width: 260px;
+  line-height: 1.6;
+  animation: fadeInDown 0.8s 0.4s ease both;
+}
+
+/* ── Tema corporativo: branding tem fundo claro (#38BDF8)
+      então os textos precisam ser escuros ── */
+[data-theme="corporativo"] .branding-title,
+[data-theme="corporativo"] .branding-subtitle,
+[data-theme="corporativo"] .branding-tagline {
+  /* Usa variável ao invés de cor hardcoded */
+  color: var(--branding-text-corporativo, #0c4a6e);
+}
+
+[data-theme="corporativo"] .branding-divider {
+  background: var(--branding-text-corporativo, #0c4a6e);
+}
+
+/* ════════════════════════════════════════
+   LADO DIREITO — Formulário
+   ════════════════════════════════════════ */
+.login-form-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 80px;
+  background: var(--bg);
+  transition: background 0.4s ease;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 380px;
+  animation: fadeInUp 0.7s 0.2s ease both;
+}
+
+.login-box h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
+}
+
+.login-box .login-welcome {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 36px;
+  font-weight: 300;
+}
+
+/* ── Campos de input ── */
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 13px 16px;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.input-group input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.input-group input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(163, 177, 138, 0.2);
+  background: var(--bg-card);
+}
+
+[data-theme="corporativo"] .input-group input:focus {
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+/* ── Botão de login ── */
+.login-box button[type="submit"] {
+  width: 100%;
+  padding: 14px;
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
+}
+
+.login-box button[type="submit"]:hover {
+  background: var(--btn-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px var(--shadow);
+}
+
+.login-box button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+/* ── Mensagem de erro ── */
+.login-erro {
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 6px;
+  color: #ef4444;
+  font-size: 0.8rem;
+  text-align: center;
+  animation: shake 0.4s ease;
+}
+
+/* ════════════════════════════════════════
+   ANIMAÇÕES
+   ════════════════════════════════════════ */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-6px); }
+  60%      { transform: translateX(6px); }
+}
+
+/* ════════════════════════════════════════
+   RESPONSIVIDADE — MOBILE
+   ════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .login-container {
+    grid-template-columns: 1fr; /* empilha vertical no mobile */
+  }
+
+  .login-branding {
+    padding: 48px 32px 40px;
+    min-height: 220px;
+  }
+
+  .branding-title {
+    font-size: 1.8rem;
+  }
+
+  .branding-logo {
+    width: 90px;
+    margin-bottom: 20px;
+  }
+
+  .login-form-side {
+    padding: 48px 32px;
+  }
+}
+
+/* ── Botão de troca de tema (canto superior) ── */
+.theme-toggle {
+  position: fixed;
+  top: 14px;
+  right: 18px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 6px 14px 6px 8px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: 0 2px 8px var(--shadow);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--input-bg);
+  border-color: var(--primary);
+}
+
+.theme-toggle .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+  transition: background 0.3s ease;
+}

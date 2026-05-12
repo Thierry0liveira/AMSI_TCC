@@ -1,0 +1,189 @@
+================================================================================
+  AMSI PROJECT — APRESENTAÇÃO E CONTEXTO
+================================================================================
+
+NOME DO PROJETO: AMSI Project
+DESCRIÇÃO: Sistema de gestão financeira para associação de moradores.
+           TCC do Pedro com aplicação real — não é exercício acadêmico.
+PRAZO: MVP finalizado.
+
+--------------------------------------------------------------------------------
+  STACK
+--------------------------------------------------------------------------------
+
+Backend  : FastAPI (Python) + PostgreSQL 17.4
+Frontend : React.js + Vite (JSX) — Vercel
+Auth     : JWT próprio com bcrypt (implementado — ver fase_atual.txt)
+Ngrok    : domínio fixo bienvenu-meningitic-alejandra.ngrok-free.dev
+           token: 3ApIjjSxFJ4NceaIBdInO3CLpyY_4YafBnmdNCTdXRZ9esHdQ
+
+--------------------------------------------------------------------------------
+  BANCO DE DADOS
+--------------------------------------------------------------------------------
+
+Banco    : AMSI_Project
+Usuário  : postgres
+Senha    : 99181
+Porta    : 5432
+OBS      : usa BIGINT GENERATED ALWAYS AS IDENTITY e ENUMs nativos do PostgreSQL
+           Trigger trigger_inadimplente existe no banco E no backend (redundância intencional)
+           Banco recriado em 11/05/2026 — admin ID=1
+
+--------------------------------------------------------------------------------
+  ESTRUTURA DO PROJETO
+--------------------------------------------------------------------------------
+
+Caminho  : C:\Codigos\AMSI_Project_Desenvolvimento
+
+backend/
+├── auth/
+│   ├── dependencies.py      — get_current_user, exige_admin
+│   └── router.py            — POST /auth/token, /auth/logout, /auth/trocar-senha
+├── comentarios/
+│   ├── fase_atual.txt       — estado atual, o que falta, regras de negócio
+│   ├── tabelas_do_banco.txt — SQL de criação do banco (fonte da verdade)
+│   ├── projeto_auth.txt
+│   ├── projeto_notificador.txt
+│   ├── projeto_bateria_pytest.txt
+│   └── projeto_sessao_token.txt
+├── models/                  — SQLAlchemy: Lancamento, ClienteFornecedor, etc.
+├── routes/                  — FastAPI endpoints
+├── schemas/                 — Pydantic: Create, Update, Response
+├── tests/
+│   ├── conftest.py          — snapshot banco antes/depois; limpa lançamentos antes de deletar usuario_base
+│   └── test_*.py            — 162 testes passando
+├── utils/
+│   ├── auth_utils.py        — hash_senha, verificar_senha, criar_token_acesso
+│   ├── bootstrap.py         — seed de admin
+│   ├── config.py            — carrega config.env (inclui FRONTEND_URL)
+│   ├── email_sender.py
+│   ├── frequentes.py        — biblioteca pessoal: boolput, configure_logging, etc.
+│   ├── inadimplencia.py     — atualizar_inadimplente(id_clifor, db)
+│   ├── request_logger.py    — middleware + /logs/ui
+│   └── telegram_sender.py
+├── database.py
+└── main.py
+
+--------------------------------------------------------------------------------
+  CONVENÇÕES E ARMADILHAS CONHECIDAS
+--------------------------------------------------------------------------------
+
+- SEMPRE verificar nomes de colunas contra comentarios/tabelas_do_banco.txt
+  antes de escrever qualquer model ou query
+- ENUMs do banco SEM acento: Debito/Credito — natureza_enum
+  O banco usa C, F, A para tipo_clifor_enum
+- Models usam values_callable para ENUMs (já aplicado em todos)
+- Campo `login` foi REMOVIDO da tabela usuario — identificador é o EMAIL
+- LancamentoCreate NÃO tem campo estorno — setar via PUT após criar
+- Inadimplência: trigger no banco + utils/inadimplencia.py (redundância intencional)
+- utils/frequentes.py: boolput, configure_logging, intput, floatput,
+  obriput, colorir, get_timestamp, mapeia_diretorio — usar sempre que possível
+- FRONTEND_URL no config.env — usado nos emails de senha provisória
+
+--------------------------------------------------------------------------------
+  COMO ENVIAR CONTEXTO PARA NOVO CHAT
+--------------------------------------------------------------------------------
+
+Enviar na ordem:
+  1. meu_perfil_de_trabalho_verde.txt
+  2. contexto_macro.txt     (este arquivo)
+  3. fase_atual.txt
+  4. tabelas_do_banco.txt
+  5. main.py e database.py
+  6. Models, schemas, routes específicos do que for trabalhar
+  + Árvore do projeto (mapeia_diretorio)
+
+--------------------------------------------------------------------------------
+  PADRÕES DE DESENVOLVIMENTO
+--------------------------------------------------------------------------------
+
+Esta seção define como crescer o projeto de forma coerente. Sempre que chegar
+uma demanda nova — do frontend, de regra de negócio, ou decisão própria —
+seguir esses padrões antes de escrever qualquer código.
+
+## QUANDO O FRONTEND PEDE ALGO NOVO
+
+Perguntas a responder antes de codar:
+
+  1. Isso já existe? Verificar se a rota ou lógica já está implementada.
+     Consultar /docs (Swagger) com o servidor rodando.
+
+  2. É uma variação de algo que existe ou é algo novo?
+     - Variação (ex: filtro em listagem existente): adicionar parâmetros na
+       rota existente, não criar rota nova.
+     - Algo novo (ex: relatório, agregação): criar rota nova seguindo o padrão.
+
+  3. Exige mudança no banco? Se sim:
+     - Atualizar tabelas_do_banco.txt ANTES de codar
+     - Atualizar o model correspondente
+     - Atualizar o schema correspondente
+     - Só então criar/modificar a route
+
+  4. Quem pode acessar? Definir se é get_current_user ou exige_admin
+     antes de implementar.
+
+## PADRÃO DE ROTA NOVA
+
+Estrutura de arquivos a seguir:
+  models/     — define a tabela (SQLAlchemy)
+  schemas/    — define o que entra e o que sai (Pydantic)
+  routes/     — define os endpoints (FastAPI)
+
+Nunca pular etapas. Sempre model → schema → route.
+Registrar a nova route no main.py.
+
+Nomenclatura:
+  - Prefixo da rota: plural, minúsculo, sem acento (ex: /lancamentos/, /usuarios/)
+  - Funções: verbo + substantivo (ex: listar_lancamentos, criar_clifor)
+  - Models: PascalCase (ex: Lancamento, ClienteFornecedor)
+  - Schemas: PascalCase + sufixo Create/Update/Response (ex: LancamentoCreate)
+
+## PADRÃO DE FILTROS EM LISTAGEM
+
+Query parameters opcionais na rota GET. Todos opcionais, sem filtro = retorna tudo.
+Filtros se acumulam (AND implícito). Nunca criar rota separada só para filtrar.
+
+## PADRÃO DE RESPOSTA DE ERRO
+
+  404 — recurso não encontrado
+  400 — dado inválido enviado pelo cliente
+  401 — não autenticado
+  403 — autenticado mas sem permissão
+  409 — conflito (ex: email já cadastrado)
+  500 — erro interno (deixar o FastAPI tratar automaticamente)
+
+Nunca retornar 200 com mensagem de erro no body.
+
+## PADRÃO DE COMUNICAÇÃO FRONTEND ↔ BACKEND
+
+O frontend sempre:
+  - Manda Authorization: Bearer <token> em todas as requisições autenticadas
+  - Recebe JSON
+  - Trata 401 redirecionando para tela de login
+  - Trata 403 mostrando mensagem de permissão insuficiente
+
+O backend sempre:
+  - Aceita e retorna JSON
+  - Nunca retorna o campo `senha` em nenhuma resposta
+  - Datas em ISO 8601 (ex: "2026-04-19T10:00:00")
+  - Decimais como string no JSON (comportamento padrão do Pydantic com DECIMAL)
+
+## ADICIONANDO CAMPO NOVO NO BANCO
+
+Checklist:
+  1. ALTER TABLE no pgAdmin
+  2. Atualizar tabelas_do_banco.txt
+  3. Atualizar model (models/)
+  4. Atualizar schemas/ (Create, Update e Response conforme necessário)
+  5. Testar com a bateria ou manualmente no Swagger
+  6. Atualizar fase_atual.txt se for pendência resolvida
+
+## LÓGICA DE NEGÓCIO — INADIMPLÊNCIA
+
+  - Clifor é inadimplente se tiver lançamento de Crédito: vencido + não pago + não estornado
+  - Gerenciado em dois lugares (redundância intencional):
+    1. Trigger trigger_inadimplente no banco (INSERT/UPDATE/DELETE em lancamento)
+    2. utils/inadimplencia.py → atualizar_inadimplente(id_clifor, db)
+       Chamado em: POST /lancamento/, PUT /lancamento/{id}, DELETE /lancamento/{id}
+
+================================================================================
